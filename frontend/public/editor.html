@@ -1,0 +1,190 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Editor</title>
+        <script type="text/javascript">
+
+            window.onload = function() {
+                if (document.body && document.body.contentEditable != undefined && window.ActiveXObject) {
+                    document.body.contentEditable = "true";
+                } else {
+                    document.designMode = "on";
+                }
+
+                // Options for the observer (which mutations to observe)
+                const config = { attributes: false, childList: true, subtree: true };
+
+                // Callback function to execute when mutations are observed
+                const callback = function(mutationsList, observer) {
+                    // Use traditional 'for loops' for IE 11
+                    for(let mutation of mutationsList) {
+                        if(document.getElementById("app") == null) {
+                            var newDiv = document.createElement("div");
+                            newDiv.setAttribute("id", "app");
+                            var newBr = document.createElement("br");
+                            newDiv.appendChild(newBr);
+                            document.body.appendChild(newDiv);
+                            var newScript1 = document.createElement("script");
+                            newScript1.setAttribute("src", "https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js");
+                            document.body.appendChild(newScript1);
+                            var newScript2 = document.createElement("script");
+                            newScript2.setAttribute("src", "https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js");
+                            document.body.appendChild(newScript2);
+                            var newScript3 = document.createElement("script");
+                            newScript3.innerText = "\
+            new Vue({\
+                el: '#app',\
+                vuetify: new Vuetify(),\
+                data: () => ({\
+                    rating: 3,\
+                    picker: new Date().toISOString().substr(0, 10),\
+                }),\
+            })\
+        ";
+                            document.body.appendChild(newScript3);
+                            var newStyle = document.createElement("style");
+                            newStyle.innerText = "\
+        .textDiv:empty:not(:focus):before{\
+            content: attr(data-text);\
+        }\
+\
+        .textH:empty:not(:focus):before{\
+            content: attr(data-text);\
+        }\
+\
+        .resizable {\
+            display: inline-block;\
+            background: red;\
+            resize: both;\
+            overflow: hidden;\
+            line-height: 0;\
+            width: 300px;\
+            height: 300px;\
+        }\
+\
+        blockquote {\
+            padding: 10px 20px;\
+            margin: 20px 30px 20px;\
+            font-size : 17.5px;\
+            border-left : 5px solid #eee;\
+        }\
+\
+        body {\
+            padding-left: 10px;\
+        }\
+\
+        ol, ul {\
+            padding: 10px;\
+            padding-left: 30px;\
+        }\
+    ";
+                            document.body.appendChild(newStyle);
+                        }
+                        if (mutation.type === 'childList') {
+                            if((mutation.addedNodes.length > 0) && (mutation.addedNodes[0].tagName == "IMG")) {
+                                var imgNode = mutation.addedNodes[0];
+                                var parent = imgNode.parentElement;
+                                var newDiv = document.createElement("div");
+                                newDiv.setAttribute("class", "resizable");
+                                newDiv.setAttribute("contentEditable", "false");
+                                newDiv.setAttribute("draggable", "true");
+                                var newImgNode = document.createElement("img");
+                                newImgNode.setAttribute("src", imgNode.src);
+                                newImgNode.setAttribute("style", "width:100%; height:100%");
+                                newImgNode.setAttribute("draggable", "false");
+                                newDiv.appendChild(newImgNode);
+                                if(parent == null) {
+                                    imgNode.remove();
+                                    mutation.previousSibling.appendChild(newDiv);
+                                    newDiv.remove();
+                                }
+                                else {
+                                    parent.replaceChild(newDiv, imgNode);
+                                }
+                            }
+                        }
+                    }
+                };
+
+                // Create an observer instance linked to the callback function
+                const observer = new MutationObserver(callback);
+
+                // Start observing the target node for configured mutations
+                observer.observe(document, config);
+            }
+
+        </script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+        <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&family=Gaegu&family=Hi+Melody&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Nanum+Pen+Script&family=Poor+Story&family=Sunflower:wght@300&family=Yeon+Sung&display=swap"
+        rel="stylesheet">
+    </head>
+    <body id="editorBody">
+        <div id="app">
+            <div contenteditable="false"></div>
+            <div class="textDiv" data-text="내용을 입력하세요."></div>
+            <div>
+                <br>
+            </div>
+            <div>
+                <br>
+            </div>
+            <div>
+                <br>
+            </div>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+        <script>
+            new Vue({
+                el: '#app',
+                vuetify: new Vuetify(),
+                data: () => ({
+                    rating: 3,
+                    picker: new Date().toISOString().substr(0, 10),
+                }),
+            })
+        </script>
+    </body>
+    <script>
+    </script>
+    <style>
+        .textDiv:empty:not(:focus):before{
+            content: attr(data-text);
+        }
+
+        .textH:empty:not(:focus):before{
+            content: attr(data-text);
+        }
+
+        .resizable {
+            display: inline-block;
+            background: red;
+            resize: both;
+            overflow: hidden;
+            line-height: 0;
+            width: 300px;
+            height: 300px;
+        }
+
+        blockquote {
+            padding: 10px 20px;
+            margin: 20px 30px 20px;
+            font-size : 17.5px;
+            border-left : 5px solid #eee;
+        }
+
+        body {
+            padding-left: 10px;
+        }
+
+        ol, ul {
+            padding: 10px;
+            padding-left: 30px;
+        }
+    </style>
+</html>

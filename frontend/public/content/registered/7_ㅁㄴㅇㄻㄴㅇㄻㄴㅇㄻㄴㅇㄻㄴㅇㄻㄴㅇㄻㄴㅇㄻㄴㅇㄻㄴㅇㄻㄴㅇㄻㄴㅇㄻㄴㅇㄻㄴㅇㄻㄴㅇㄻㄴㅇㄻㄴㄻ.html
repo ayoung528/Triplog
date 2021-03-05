@@ -1,0 +1,21 @@
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"><title>Editor</title></head><body>
+        <div class="textDiv" data-text="여기에 글자를 입력해주세요.">ㅁㄴㅇㄻㄴㅇㄹ</div>
+    
+    <script>
+    </script>
+    <style>
+        .textDiv:empty:not(:focus):before{
+            content: attr(data-text);
+        }
+
+        .resizable {
+            display: inline-block;
+            background: red;
+            resize: both;
+            overflow: hidden;
+            line-height: 0;
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</body>

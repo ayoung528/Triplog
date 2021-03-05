@@ -1,0 +1,21 @@
+<head>        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">        <title>Editor</title>        <script type="text/javascript">            window.onload = function() {                if (document.body && document.body.contentEditable != undefined && window.ActiveXObject) {                    document.body.contentEditable = "true";                } else {                    document.designMode = "on";                }                // Options for the observer (which mutations to observe)                const config = { attributes: false, childList: true, subtree: true };                // Callback function to execute when mutations are observed                const callback = function(mutationsList, observer) {                    for(let mutation of mutationsList) {                        if (mutation.type === "childList") {                            if((mutation.addedNodes.length > 0) && (mutation.addedNodes[0].tagName == "IMG")) {                                var imgNode = mutation.addedNodes[0];                                var parent = imgNode.parentElement;                                var newDiv = document.createElement("div");                                newDiv.setAttribute("class", "resizable");                                newDiv.setAttribute("contentEditable", "false");                                newDiv.setAttribute("draggable", "true");                                var newImgNode = document.createElement("img");                                newImgNode.setAttribute("src", imgNode.src);                                newImgNode.setAttribute("style", "width:100%; height:100%");                                newImgNode.setAttribute("draggable", "false");                                newDiv.appendChild(newImgNode);                                if(parent == null) {                                    imgNode.remove();                                    mutation.previousSibling.appendChild(newDiv);                                    newDiv.remove();                                }                                else {                                    parent.replaceChild(newDiv, imgNode);                                }                            }                        }                    }                };                // Create an observer instance linked to the callback function                const observer = new MutationObserver(callback);                // Start observing the target node for configured mutations                observer.observe(document, config);            }    <//script>        <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&family=Gaegu&family=Hi+Melody&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Nanum+Pen+Script&family=Poor+Story&family=Sunflower:wght@300&family=Yeon+Sung&display=swap"        rel="stylesheet">    </head>    <body id="editorBody">
+        <div class="textDiv" data-text="여기에 글자를 입력해주세요."><div class="resizable" contenteditable="false" draggable="true"><img src="blob:http://localhost:8081/2ba5e737-54fd-4b10-ac32-90c68aba03ee" style="width:100%; height:100%" draggable="false"></div>asdasdasd</div>
+    
+    <script>
+    </script>
+    <style>
+        .textDiv:empty:not(:focus):before{
+            content: attr(data-text);
+        }
+
+        .resizable {
+            display: inline-block;
+            background: red;
+            resize: both;
+            overflow: hidden;
+            line-height: 0;
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head><body></body>

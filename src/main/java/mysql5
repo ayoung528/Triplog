@@ -1,0 +1,212 @@
+drop database tbdb;
+create database tbdb;
+use tbdb;
+
+CREATE TABLE `users` (
+   `num`   bigint   NOT NULL AUTO_INCREMENT,
+   `email`   varchar(40)   NULL,
+   `name`   varchar(40)   NULL,
+   `nickname`   varchar(15)   NULL,
+   `password`   varchar(100)   NULL,
+   `intro`   varchar(1000) NULL,
+   `imageSrc`   varchar(500) NULL,
+   `mainPost`   int NULL,
+   `valid`   boolean default false,
+   `created_at`   timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`num`),
+    UNIQUE KEY `uk_users_nickname` (`nickname`),
+    UNIQUE KEY `uk_users_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `roles` (
+  `num` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL,
+  PRIMARY KEY (`num`),
+  UNIQUE KEY `uk_roles_name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `user_roles` (
+  `user_id` bigint(20) NOT NULL,
+  `role_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`user_id`,`role_id`),
+  KEY `fk_user_roles_role_num` (`role_id`),
+  CONSTRAINT `fk_user_roles_role_num` FOREIGN KEY (`role_id`) REFERENCES `roles` (`num`),
+  CONSTRAINT `fk_user_roles_user_num` FOREIGN KEY (`user_id`) REFERENCES `users` (`num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `Article` (
+   `num`   bigint   NOT NULL auto_increment,
+   `user_num`   bigint   NOT NULL,
+   `tripPackage_num`   bigint   NULL,
+   `title`   varchar(100)   NULL,
+   `place`   varchar(20)   NULL,
+   `content`   MEDIUMTEXT   NULL,
+   `thumbnail`   varchar(500)   NULL,
+   `temp`   boolean   NULL,
+   `created_at`   timestamp   NULL,
+   `date_start`   timestamp   NULL,
+   `date_end`   timestamp   NULL,
+   `like_count`   int   NULL,
+   `views`   int   NULL,
+    PRIMARY KEY (`num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `TripPackage` (
+   `num`   bigint   NOT NULL auto_increment,
+   `user_num`   bigint   NOT NULL,
+   `name`   varchar(15)   NULL,
+    PRIMARY KEY (`num`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `TripPackageScooped` (
+   `user_num`   bigint   NOT NULL,
+   `tripPackage_num`   bigint   NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `Pre_Article` (
+   `num`   bigint   NOT NULL auto_increment,
+   `user_num`   bigint   NOT NULL,
+   `date`   timestamp   NULL,
+   `comment`   varchar(1000)   NULL,
+   `place`   varchar(20)   NULL,
+   `media`   varchar(500) NULL,
+    PRIMARY KEY (`num`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `like_Article` (
+   `user_num`   bigint   NOT NULL,
+   `article_num`   bigint   NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `Comment` (
+   `num`   bigint   NOT NULL AUTO_INCREMENT,
+   `user_num`   bigint   NOT NULL,
+   `article_num`   bigint   NOT NULL,
+   `content`   varchar(1000)   NULL,
+   `reply_num`   bigint   NULL,
+   `user_nickname`   varchar(15)   NOT NULL,
+   `user_email`   varchar(40)   NOT NULL,
+    `user_img`   varchar(500) NULL,
+   `created_at`   timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `neighbor` (
+   `user_num`   bigint   NOT NULL,
+   `neighbor_num`   bigint   NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `BlogInfo` (
+   `num`   bigint   NOT NULL auto_increment,
+   `user_num`   bigint   NOT NULL,
+   `title`   varchar(100)   NULL,
+   `title_img`   varchar(500)   NULL,
+   `visit_count`   int   NULL,
+    PRIMARY KEY (`num`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `Article` ADD CONSTRAINT `FK_users_TO_Article_1` FOREIGN KEY (
+   `user_num`
+)
+REFERENCES `users` (
+   `num`
+);
+
+ALTER TABLE `Article` ADD CONSTRAINT `FK_TripPackage_TO_Article_1` FOREIGN KEY (
+   `tripPackage_num`
+)
+REFERENCES `TripPackage` (
+   `num`
+);
+
+ALTER TABLE `TripPackage` ADD CONSTRAINT `FK_users_TO_TripPackage_1` FOREIGN KEY (
+   `user_num`
+)
+REFERENCES `users` (
+   `num`
+);
+
+ALTER TABLE `TripPackageScooped` ADD CONSTRAINT `FK_users_TO_TripPackageScooped_1` FOREIGN KEY (
+   `user_num`
+)
+REFERENCES `users` (
+   `num`
+);
+
+ALTER TABLE `TripPackageScooped` ADD CONSTRAINT `FK_TripPackage_TO_TripPackageScooped_1` FOREIGN KEY (
+   `tripPackage_num`
+)
+REFERENCES `TripPackage` (
+   `num`
+);
+
+ALTER TABLE `Pre_Article` ADD CONSTRAINT `FK_users_TO_Pre_Article_1` FOREIGN KEY (
+   `user_num`
+)
+REFERENCES `users` (
+   `num`
+);
+
+ALTER TABLE `like_Article` ADD CONSTRAINT `FK_users_TO_like_Article_1` FOREIGN KEY (
+   `user_num`
+)
+REFERENCES `users` (
+   `num`
+);
+
+ALTER TABLE `like_Article` ADD CONSTRAINT `FK_Article_TO_like_Article_1` FOREIGN KEY (
+   `article_num`
+)
+REFERENCES `Article` (
+   `num`
+);
+
+ALTER TABLE `Comment` ADD CONSTRAINT `FK_users_TO_Comment_1` FOREIGN KEY (
+   `user_num`
+)
+REFERENCES `users` (
+   `num`
+);
+
+ALTER TABLE `Comment` ADD CONSTRAINT `FK_Article_TO_Comment_1` FOREIGN KEY (
+   `article_num`
+)
+REFERENCES `Article` (
+   `num`
+);
+
+ALTER TABLE `neighbor` ADD CONSTRAINT `FK_users_TO_neighbor_1` FOREIGN KEY (
+   `user_num`
+)
+REFERENCES `users` (
+   `num`
+);
+
+ALTER TABLE `Comment` ADD CONSTRAINT `FK_users_TO_Comment_1` FOREIGN KEY (
+   `user_num`
+)
+REFERENCES `users` (
+   `num`
+);
+
+ALTER TABLE `Comment` ADD CONSTRAINT `FK_Article_TO_Comment_1` FOREIGN KEY (
+   `article_num`
+)
+REFERENCES `Article` (
+   `num`
+);
+
+ALTER TABLE `BlogInfo` ADD CONSTRAINT `FK_users_TO_BlogInfo_1` FOREIGN KEY (
+   `user_num`
+)
+REFERENCES `users` (
+   `num`
+);
+
+INSERT IGNORE INTO roles(name) VALUES('ROLE_USER');
+INSERT IGNORE INTO roles(name) VALUES('ROLE_ADMIN');
+
+SET SQL_SAFE_UPDATES = 0;
+alter table article add user_nickname varchar(15) not null;
